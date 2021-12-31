@@ -1,0 +1,32 @@
+"""
+Solution: Create class, implement generator in `__iter__` method
+"""
+
+from collections import deque
+
+
+class LineHistory:
+    def __init__(self, lines, histlen=3):
+        self.lines = lines
+        self.history = deque(maxlen=histlen)
+    
+    def clear(self):
+        self.history.clear()
+    
+    # generator function, as in 4.2
+    def __iter__(self):
+        for lineno, line in enumerate(self.lines, 1):
+            self.history.append((lineno, line))
+            yield line
+
+
+if __name__ == "__main__":
+    """Then, we can use this object just as normal iteration function!"""
+    input_path = '../data/sample.txt'
+    with open(input_path) as f:
+        lines = LineHistory(f)
+        for line in lines:
+            if "it" in line:
+                print("Line with 'it' identified!")
+                for lineno, historical_line in lines.history:
+                    print(f"{lineno} : {historical_line}", end="")
